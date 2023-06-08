@@ -1,0 +1,250 @@
+Question 1
+Given an integer array nums of length n and an integer target, find three integers
+in nums such that the sum is closest to the target.
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+
+Question 2
+Given an array nums of n integers, return an array of all the unique quadruplets
+[nums[a], nums[b], nums[c], nums[d]] such that:
+           ● 0 <= a, b, c, d < n
+           ● a, b, c, and d are distinct.
+           ● nums[a] + nums[b] + nums[c] + nums[d] == target
+
+You may return the answer in any order.
+Answer- 
+
+Code:-
+
+def threeSumClosest(nums: List[int], target: int) -> int:
+    # Sort the given array
+    nums.sort()
+    # Length of the array
+    n = len(nums)
+    # Closest value
+    closest = nums[0] + nums[1] + nums[n - 1]
+    # Loop for each element of the array
+    for i in range(0, n - 2):
+        # Left and right pointers
+        j = i + 1
+        k = n - 1
+        # Loop for all other pairs
+        while j < k:
+            current_sum = nums[i] + nums[j] + nums[k]
+            if current_sum <= target:
+                j += 1
+            else:
+                k -= 1
+            if abs(closest - target) > abs(current_sum - target):
+                closest = current_sum
+    return closest
+
+
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+ 
+        if(nums==null|| nums.length<4)
+          return result;
+ 
+        Arrays.sort(nums);
+ 
+      for(int i=0; i<nums.length-3; i++){
+        if(i!=0 && nums[i]==nums[i-1])
+                continue;
+        for(int j=i+1; j<nums.length-2; j++){
+                if(j!=i+1 && nums[j]==nums[j-1])
+                    continue;
+                int k=j+1;
+                int l=nums.length-1;
+                while(k<l){
+                    if(nums[i]+nums[j]+nums[k]+nums[l]<target){
+                        k++;
+                    }else if(nums[i]+nums[j]+nums[k]+nums[l]>target){
+                        l--;
+                    }else{
+                        List<Integer> t = new ArrayList<Integer>();
+                        t.add(nums[i]);
+                        t.add(nums[j]);
+                        t.add(nums[k]);
+                        t.add(nums[l]);
+                        result.add(t);
+ 
+                        k++;
+                        l--;
+ 
+                        while(k<l &&nums[l]==nums[l+1] ){
+                            l--;
+                        }
+ 
+                        while(k<l &&nums[k]==nums[k-1]){
+                         k++;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+
+Question 4
+Given a sorted array of distinct integers and a target value, return the index if the
+target is found. If not, return the index where it would be if it were inserted in
+order.
+
+You must write an algorithm with O(log n) runtime complexity.
+
+Answer-
+
+
+def find_index(arr, n, K):
+ 
+
+    start = 0
+    end = n - 1
+ 
+
+    while start<= end:
+ 
+        mid =(start + end)//2
+ 
+        if arr[mid] == K:
+            return mid
+ 
+        elif arr[mid] < K:
+            start = mid + 1
+        else:
+            end = mid-1
+ 
+
+    return end + 1
+ 
+
+arr = [1, 3, 5, 6]
+n = len(arr)
+K = 2
+print(find_index(arr, n, K))
+
+
+Question 5
+You are given a large integer represented as an integer array digits, where each
+digits[i] is the ith digit of the integer. The digits are ordered from most significant
+to least significant in left-to-right order. The large integer does not contain any
+leading 0's.
+
+Increment the large integer by one and return the resulting array of digits.
+Answer -
+
+class Solution {  
+    public int[] plusOne(int[] digits) {  
+        int num = 0;  
+        for (int a : digits) {  
+            num = 10*num + a;  
+        }  
+        int n=num+1;  
+        String str=String.valueOf(n);  
+        int arr[]=new int[str.length()];  
+        for(int i=0;i<str.length();i++){  
+            arr[i]=str.charAt(i)-'0';  
+        }  
+        return arr;  
+    }
+}
+
+Question 6
+Given a non-empty array of integers nums, every element appears twice except
+for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only
+constant extra space.
+
+Answer-
+
+nums.sort()
+i = 0
+for i in range(len(nums)-1):
+    if nums[i] == nums[i+1]:
+        i = i + 2
+    else: 
+        return nums[i]
+
+Question 7 
+
+You are given an inclusive range [lower, upper] and a sorted unique integer array
+nums, where all elements are within the inclusive range.
+
+A number x is considered missing if x is in the range [lower, upper] and x is not in
+nums.
+
+Return the shortest sorted list of ranges that exactly covers all the missing
+numbers. That is, no element of nums is included in any of the ranges, and each
+missing number is covered by one of the ranges.
+
+Answer- 
+
+class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> res = new ArrayList<String>();
+        int next = lower;
+        for (int i = 0; i < nums.length; i++) {
+            // 1. We don't need to add [Integer.MAX_VALUE, ...] to result
+            if(lower == Integer.MAX_VALUE) return res;
+            if (nums[i] < next) {
+                continue;
+            }
+            if (nums[i] == next) {
+                next++;
+                continue;
+            }
+            res.add(getRange(next, nums[i] - 1));
+            // 2. We don't need to proceed after we have process Integer.MAX_VALUE in array
+            if(nums[i] == Integer.MAX_VALUE) return res;
+            next = nums[i] + 1;
+        }
+        
+        if (next <= upper) {
+            res.add(getRange(next, upper));
+        }
+        return res;
+    }
+    
+    public String getRange(int n1, int n2) {
+        return n1 == n2 ? String.valueOf(n1) : String.format("%d->%d" , n1, n2);
+    }
+        
+}
+
+
+Question 8
+Given an array of meeting time intervals where intervals[i] = [starti, endi],
+determine if a person could attend all meetings.
+
+Anser-
+
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int[] starts = new int[intervals.length];
+        int[] ends = new int[intervals.length];
+        for(int i=0; i<intervals.length; i++) 
+        {
+            starts[i] = intervals[i][0];
+            ends[i] = intervals[i][1];
+        }
+        
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        
+        int rooms = 0;
+        int endsItr = 0;
+        for(int i=0; i<starts.length; i++) 
+        {
+            if(starts[i]<ends[endsItr])
+                rooms++;
+            else
+                endsItr++;
+        }
+        return rooms;
+    }
+}
